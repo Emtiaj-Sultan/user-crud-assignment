@@ -19,7 +19,7 @@ const createUserIntoDB = async (user: TUser): Promise<SubTUser> => {
 };
 
 const getAllUserFromDB = async (): Promise<TUser[]> => {
-  if ((await User.collection.countDocuments()) !== 0) {
+  if ((await User.countDocuments()) !== 0) {
     const result = await User.aggregate([
       { $match: {} },
       {
@@ -88,11 +88,15 @@ const getAllSingleUserOrdersFromDB = async (
   userId: number,
 ): Promise<SubTUser | null> => {
   if (await User.isUserExists(userId)) {
-    const allOrders = await User.findOne({ userId: userId }).select({
-      orders: 1,
-      _id: 0,
-    });
-    return allOrders;
+    const allOrders = await User.findOne(
+      { userId: userId },
+      {
+        orders: 1,
+        _id: 0,
+      },
+    );
+    if (allOrders?.orders.length !== 0) return allOrders;
+    throw new Error("Have n't place any order yet. please order first!");
   }
   throw new Error('User not found');
 };
@@ -127,8 +131,8 @@ const calculateTotalOrdersPriceFromDB = async (
         },
       },
     ]);
-
-    return totalPrice;
+    if (totalPrice.length !== 0) return totalPrice;
+    throw new Error('There have no order to calculated!');
   }
   throw new Error('User not found');
 };
