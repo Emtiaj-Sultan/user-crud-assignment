@@ -1,5 +1,7 @@
+import { UpdateUser } from './update.user.interface';
 import { SubTUser, TUser } from './user.interface';
 import { User } from './user.model';
+import lodash from 'lodash';
 
 const createUserIntoDB = async (user: TUser): Promise<SubTUser> => {
   const newUser = await User.create(user);
@@ -52,20 +54,31 @@ const deleteUserFromDB = async (userId: number): Promise<SubTUser | null> => {
   }
   throw new Error('User not found');
 };
-const updateUserFromDB = async (userId: number, userData: TUser) => {
+
+const updateUserFromDB = async (userId: number, userData: UpdateUser) => {
+  // This function is for checking that update value already exists or not. if not it will given an empty array. And i have making decision on that. One things if multiple field values are same but one or more field value is not same than also this function work fine.
+  function areEqualData(obj1: UpdateUser, obj2: TUser | null) {
+    const exists = lodash.filter(obj2, lodash.matches(obj1));
+    return exists.length > 0 ? true : false;
+  }
+
   if (await User.isUserExists(userId)) {
-    const result = await User.findOneAndUpdate(
-      { userId: userId },
-      { $set: userData },
-      {
-        new: true,
-        runValidators: true,
-      },
-    ).select({
-      orders: 0,
-      _id: 0,
-    });
-    return result;
+    const currentData = await User.findOne({ userId: userId });
+    if (areEqualData(userData, currentData) === false) {
+      const result = await User.findOneAndUpdate(
+        { userId: userId },
+        { $set: userData },
+        {
+          new: true,
+          runValidators: true,
+        },
+      ).select({
+        orders: 0,
+        _id: 0,
+      });
+      return result;
+    }
+    throw new Error('The value you enter already exists!');
   }
   throw new Error('User not found');
 };
