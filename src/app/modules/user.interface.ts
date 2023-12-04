@@ -1,12 +1,12 @@
 import { Model } from 'mongoose';
 
-type TOrders = {
+export interface TOrders {
   productName: string;
   price: number;
   quantity: number;
-};
+}
 
-export type TUser = {
+export interface TUser {
   userId: number;
   username: string;
   password: string;
@@ -24,7 +24,7 @@ export type TUser = {
     country: string;
   };
   orders: TOrders[];
-};
+}
 export interface SubTUser
   extends Omit<
     TUser,
