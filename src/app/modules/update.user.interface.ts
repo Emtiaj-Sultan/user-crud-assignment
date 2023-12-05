@@ -1,5 +1,3 @@
-import { Model } from 'mongoose';
-
 export interface TOrders {
   productName?: string;
   price?: number;
@@ -24,7 +22,4 @@ export interface UpdateUser {
     country?: string;
   };
   orders?: TOrders[];
-}
-export interface UserMethod extends Model<UpdateUser> {
-  isUserExists(userId: number): Promise<UpdateUser | undefined>;
 }

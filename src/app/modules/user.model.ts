@@ -71,7 +71,6 @@ userSchema.pre(
     const user = await this.model.findOne(filter);
     const hashed = await bcrypt.hash(user.password, Number(config.bcrypt_salt));
     this.set('password', hashed);
-    console.log(user);
   },
 );
 

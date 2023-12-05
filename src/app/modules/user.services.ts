@@ -41,7 +41,7 @@ const getAllUserFromDB = async (): Promise<TUser[]> => {
 };
 const getSingleUserFromDB = async (userId: number): Promise<TUser | null> => {
   if (await User.isUserExists(userId)) {
-    const result = await User.findOne({ userId });
+    const result = await User.findOne({ userId }, { _id: 0, orders: 0 });
     return result;
   }
   throw new Error('User not found');
