@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { userServices } from './user.services';
-import { userValidationZodSchema } from './user.zodvalidation';
 import { userUpdateValidationZodSchema } from './user.updateValidation';
+import { userValidationZodSchema } from './user.zodvalidation';
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -14,7 +14,7 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User created successfully!',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
       message: 'User creation failed!',
@@ -101,10 +101,10 @@ const updateUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(404).json({
       success: false,
-      message: error.message || 'User updated failed!',
+      message: error.message || 'User update failed!',
       error: {
         code: 404,
-        description: error.message,
+        description: error.message || 'User update failed!',
       },
     });
   }

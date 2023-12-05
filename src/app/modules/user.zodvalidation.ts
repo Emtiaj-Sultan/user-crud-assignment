@@ -9,7 +9,7 @@ export const userValidationZodSchema = z.object({
     lastName: z.string().min(1).max(20).trim(),
   }),
   age: z.number(),
-  email: z.string().min(1).max(20).trim(),
+  email: z.string().min(1).trim(),
   isActive: z.boolean(),
   hobbies: z.string().array(),
   address: z.object({

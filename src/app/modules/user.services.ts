@@ -4,7 +4,8 @@ import { User } from './user.model';
 import lodash from 'lodash';
 
 const createUserIntoDB = async (user: TUser): Promise<SubTUser> => {
-  const newUser = await User.create(user);
+  const newUser = new User(user);
+  await newUser.save();
   const { userId, username, fullName, age, email, isActive, hobbies, address } =
     newUser;
   const result = {
@@ -57,12 +58,12 @@ const deleteUserFromDB = async (userId: number): Promise<SubTUser | null> => {
 
 const updateUserFromDB = async (userId: number, userData: UpdateUser) => {
   // This function is for checking that update value already exists or not. if not it will given an empty array. And i have making decision on that. One things if multiple field values are same but one or more field value is not same than also this function work fine.
+
   async function areEqualData() {
     const currentData = await User.findOne({ userId: userId });
     const exists = lodash.filter(currentData, lodash.matches(userData));
     return exists.length > 0 ? true : false;
   }
-
   if (await User.isUserExists(userId)) {
     if ((await areEqualData()) === false) {
       const result = await User.findOneAndUpdate(

@@ -66,11 +66,12 @@ userSchema.pre('save', async function (next) {
 userSchema.pre(
   'findOneAndUpdate',
   { document: false, query: true },
-  async function () {
+  async function (next) {
     const filter = this.getFilter();
     const user = await this.model.findOne(filter);
     const hashed = await bcrypt.hash(user.password, Number(config.bcrypt_salt));
     this.set('password', hashed);
+    next();
   },
 );
 
