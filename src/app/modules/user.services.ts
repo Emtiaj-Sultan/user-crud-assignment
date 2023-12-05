@@ -57,7 +57,7 @@ const deleteUserFromDB = async (userId: number): Promise<SubTUser | null> => {
 };
 
 const updateUserFromDB = async (userId: number, userData: UpdateUser) => {
-  // This function is for checking that update value already exists or not. if not it will given an empty array. And i have making decision on that. One things if multiple field values are same but one or more field value is not same than also this function work fine.
+  // This function is for checking that update value already exists or not. if not it will given an empty array. And i have making decision on that. One things if multiple field values are same but one or more field value is not same than also this function work fine. It will not working with password field.
 
   async function areEqualData() {
     const currentData = await User.findOne({ userId: userId });
@@ -83,6 +83,7 @@ const updateUserFromDB = async (userId: number, userData: UpdateUser) => {
   }
   throw new Error('User not found');
 };
+
 const addNewOrderToUserDB = async (
   userId: number,
   userData: TUser,
@@ -114,6 +115,7 @@ const getAllSingleUserOrdersFromDB = async (
   }
   throw new Error('User not found');
 };
+// Calculated total and return total of price
 const calculateTotalOrdersPriceFromDB = async (
   userId: number,
 ): Promise<SubTUser | null> => {
@@ -150,6 +152,8 @@ const calculateTotalOrdersPriceFromDB = async (
   }
   throw new Error('User not found');
 };
+
+// From here all services export
 export const userServices = {
   createUserIntoDB,
   getAllUserFromDB,

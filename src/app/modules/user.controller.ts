@@ -25,6 +25,7 @@ const createUser = async (req: Request, res: Response) => {
     });
   }
 };
+
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await userServices.getAllUserFromDB();
@@ -44,6 +45,7 @@ const getAllUsers = async (req: Request, res: Response) => {
     });
   }
 };
+
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -64,6 +66,7 @@ const getSingleUser = async (req: Request, res: Response) => {
     });
   }
 };
+
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -84,6 +87,7 @@ const deleteUser = async (req: Request, res: Response) => {
     });
   }
 };
+
 const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -109,6 +113,7 @@ const updateUser = async (req: Request, res: Response) => {
     });
   }
 };
+
 const addNewOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -133,6 +138,7 @@ const addNewOrder = async (req: Request, res: Response) => {
     });
   }
 };
+
 const getSingleUserOrders = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -155,6 +161,7 @@ const getSingleUserOrders = async (req: Request, res: Response) => {
     });
   }
 };
+
 const totalPrice = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;

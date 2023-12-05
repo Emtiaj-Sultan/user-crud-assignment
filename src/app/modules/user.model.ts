@@ -59,10 +59,15 @@ const userSchema = new Schema<TUser, UserMethod>(
   { versionKey: false },
 );
 
+// this pre middleware hashed password when save it data base
+
 userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt));
   next();
 });
+
+// this pre middleware hashed password when update
+
 userSchema.pre(
   'findOneAndUpdate',
   { document: false, query: true },
@@ -80,6 +85,7 @@ userSchema.statics.isUserExists = async function (userId: number) {
   const userExists = await User.findOne({ userId });
   return userExists;
 };
+
 // Hide password from response use this method
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
