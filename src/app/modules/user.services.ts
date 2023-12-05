@@ -57,14 +57,14 @@ const deleteUserFromDB = async (userId: number): Promise<SubTUser | null> => {
 
 const updateUserFromDB = async (userId: number, userData: UpdateUser) => {
   // This function is for checking that update value already exists or not. if not it will given an empty array. And i have making decision on that. One things if multiple field values are same but one or more field value is not same than also this function work fine.
-  function areEqualData(obj1: UpdateUser, obj2: TUser | null) {
-    const exists = lodash.filter(obj2, lodash.matches(obj1));
+  async function areEqualData() {
+    const currentData = await User.findOne({ userId: userId });
+    const exists = lodash.filter(currentData, lodash.matches(userData));
     return exists.length > 0 ? true : false;
   }
 
   if (await User.isUserExists(userId)) {
-    const currentData = await User.findOne({ userId: userId });
-    if (areEqualData(userData, currentData) === false) {
+    if ((await areEqualData()) === false) {
       const result = await User.findOneAndUpdate(
         { userId: userId },
         { $set: userData },

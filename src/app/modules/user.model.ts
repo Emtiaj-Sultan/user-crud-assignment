@@ -59,9 +59,21 @@ const userSchema = new Schema<TUser, UserMethod>(
   { versionKey: false },
 );
 
-userSchema.pre('save', async function () {
+userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt));
+  next();
 });
+userSchema.pre(
+  'findOneAndUpdate',
+  { document: false, query: true },
+  async function () {
+    const filter = this.getFilter();
+    const user = await this.model.findOne(filter);
+    const hashed = await bcrypt.hash(user.password, Number(config.bcrypt_salt));
+    this.set('password', hashed);
+    console.log(user);
+  },
+);
 
 // Custom statics method for check user has or not
 userSchema.statics.isUserExists = async function (userId: number) {
