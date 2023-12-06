@@ -10,7 +10,12 @@ export const userUpdateValidationZodSchema = z.object({
       lastName: z.string().min(1).max(20).trim().optional(),
     })
     .optional(),
-  age: z.number().positive().optional(),
+  age: z
+    .number()
+    .refine((data) => data > 0, {
+      message: 'Number must be positive and not less than zero!',
+    })
+    .optional(),
   email: z.string().min(1).optional(),
   isActive: z.boolean().optional(),
   hobbies: z.string().array().optional(),
@@ -24,9 +29,9 @@ export const userUpdateValidationZodSchema = z.object({
   orders: z
     .array(
       z.object({
-        productName: z.string().trim().optional(),
-        price: z.number().positive().optional(),
-        quantity: z.number().positive().optional(),
+        productName: z.string().trim(),
+        price: z.number().positive(),
+        quantity: z.number().positive(),
       }),
     )
     .optional(),

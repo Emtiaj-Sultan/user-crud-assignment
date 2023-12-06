@@ -56,42 +56,48 @@ const deleteUserFromDB = async (userId: number): Promise<SubTUser | null> => {
   throw new Error('User not found');
 };
 
-const updateUserFromDB = async (userId: number, userData: UpdateUser) => {
+const updateUserFromDB = async (
+  userId: number,
+  userData: UpdateUser,
+): Promise<SubTUser | null> => {
   // This function is for checking that update value already exists or not. if not it will given an empty array. And i have making decision on that. One things if multiple field values are same but one or more field value is not same than also this function work fine. It will not working with password field.
-
   async function areEqualData() {
     const currentData = await User.findOne({ userId: userId });
     const exists = lodash.filter(currentData, lodash.matches(userData));
     return exists.length > 0 ? true : false;
   }
   if (await User.isUserExists(userId)) {
-    if ((await areEqualData()) === false) {
-      const result = await User.findOneAndUpdate(
-        { userId: userId },
-        { $set: userData },
-        {
-          new: true,
-          runValidators: true,
-        },
-      ).select({
-        orders: 0,
-        _id: 0,
-      });
-      return result;
+    if (lodash.has(userData, 'orders') === true) {
+      throw new Error("Order field can't update!");
+    } else {
+      if ((await areEqualData()) === false) {
+        const result = await User.findOneAndUpdate(
+          { userId: userId },
+          { $set: userData },
+          {
+            new: true,
+            runValidators: true,
+          },
+        ).select({
+          orders: 0,
+          _id: 0,
+        });
+        return result;
+      }
+      throw new Error('The value you enter already exists!');
     }
-    throw new Error('The value you enter already exists!');
   }
   throw new Error('User not found');
 };
 
 const addNewOrderToUserDB = async (
   userId: number,
-  userData: TUser,
+  userData: UpdateUser,
 ): Promise<SubTUser | null> => {
   if (await User.isUserExists(userId)) {
     const result = await User.updateOne(
       { userId: userId, orders: { $exists: true } },
-      { $push: { orders: userData } },
+      { $push: { orders: userData.orders?.[0] } },
       { new: true, runValidators: true },
     );
     return result.upsertedId;

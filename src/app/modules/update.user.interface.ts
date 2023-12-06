@@ -1,7 +1,7 @@
 export interface TOrders {
-  productName?: string;
-  price?: number;
-  quantity?: number;
+  productName: string;
+  price: number;
+  quantity: number;
 }
 
 export interface UpdateUser {

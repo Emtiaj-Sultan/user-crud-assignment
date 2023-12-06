@@ -118,9 +118,13 @@ const addNewOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const userData = req.body;
+    const validateOrders = userUpdateValidationZodSchema.parse({
+      orders: [userData],
+    });
+
     const result = await userServices.addNewOrderToUserDB(
       parseInt(userId),
-      userData,
+      validateOrders,
     );
     res.status(200).json({
       success: true,

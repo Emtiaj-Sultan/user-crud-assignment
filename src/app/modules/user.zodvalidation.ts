@@ -22,7 +22,9 @@ export const userValidationZodSchema = z.object({
       z.object({
         productName: z.string().trim(),
         price: z.number().positive(),
-        quantity: z.number().positive(),
+        quantity: z
+          .number({ required_error: 'Quantity is required!' })
+          .positive({ message: 'Must be positive number!' }),
       }),
     )
     .default([]),
